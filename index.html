@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CareerPath – Student Career Guidance Portal</title>
+<meta name="description" content="Explore careers, courses after 10th and 12th, scholarships and free learning resources.">
+<style>
+/* style.css – CareerPath. Colours are variables so dark mode only swaps the values. */
+:root{--bg:#f6f9fc;--alt:#eaf1f8;--card:#fff;--text:#14233a;--muted:#52617a;--navy:#0b2545;--accent:#0b7a85;--accent-2:#0e9aa7;--line:#d5dfeb;--shadow:0 2px 10px rgba(11,37,69,.08)}
+[data-theme="dark"]{--bg:#0b1626;--alt:#0f1d31;--card:#14263f;--text:#e8eef6;--muted:#a9b8cc;--navy:#e8eef6;--accent:#4fd1c5;--accent-2:#4fd1c5;--line:#2a3f5e;--shadow:none}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--navy);line-height:1.2}
+h1{font-size:clamp(2rem,5vw,3.4rem);margin:0 0 .6rem}
+h2{font-size:1.9rem;margin:1.5rem 0 .6rem}
+h3{font-size:1.2rem;margin:1.2rem 0 .4rem}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.1rem}
+.narrow{max-width:760px}
+.block{padding:2.2rem 0}
+.alt{background:var(--alt)}
+.sr{position:absolute;left:-9999px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:#fff;padding:.5rem;z-index:99}
+:focus-visible{outline:3px solid var(--accent-2);outline-offset:2px}
+
+/* Navigation */
+.nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:.8rem;padding:.6rem 1.1rem;background:var(--card);border-bottom:1px solid var(--line)}
+.logo{font:700 1.4rem Georgia,serif;color:var(--navy);text-decoration:none;margin-right:auto}
+.logo b{color:var(--accent)}
+#menu{display:flex;gap:1rem}
+#menu a{color:var(--text);text-decoration:none;font-size:.95rem}
+#menu a:hover{color:var(--accent)}
+.menu-btn{display:none}
+
+/* Buttons */
+.btn{display:inline-block;background:var(--accent);color:#fff;border:2px solid var(--accent);padding:.6rem 1.2rem;border-radius:8px;font:600 1rem inherit;cursor:pointer;text-decoration:none}
+[data-theme="dark"] .btn{color:#06222a}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.small{padding:.35rem .8rem;font-size:.9rem}
+.icon-btn{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:.4rem .7rem;cursor:pointer;font:inherit}
+
+/* Hero */
+.hero{background:var(--navy);color:#fff;padding:3.5rem 0}
+[data-theme="dark"] .hero{background:#0f2540}
+.hero h1{color:#fff}
+.lead{max-width:620px;font-size:1.1rem;color:#d6e2f0}
+.hero .btn.ghost{color:#fff;border-color:#fff}
+.hero .btn{background:var(--accent-2);border-color:var(--accent-2);color:#06222a}
+.hero .btn.ghost{background:transparent;color:#fff;border-color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0}
+.search{display:flex;gap:.5rem;max-width:620px;margin-top:1rem}
+.search input{flex:1}
+.results{max-width:620px;margin-top:.6rem}
+.hit{display:block;background:var(--card);color:var(--text);padding:.5rem .8rem;border-radius:8px;margin-bottom:.3rem;text-decoration:none}
+.hero .muted,.hero .empty{color:#d6e2f0}
+
+/* Cards and grids */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+.grid.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.1rem;box-shadow:var(--shadow)}
+.card h3{margin-top:.4rem}
+button.cat{text-align:left;font:600 1rem Georgia,serif;color:var(--navy);cursor:pointer}
+button.cat:hover{border-color:var(--accent)}
+.tag{display:inline-block;font-size:.8rem;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:.05rem .6rem}
+.small-p{margin:.3rem 0;font-size:.92rem}
+.muted{color:var(--muted)}
+.note{background:var(--card);border-left:4px solid var(--accent);padding:.7rem 1rem;border-radius:6px}
+.empty{padding:1rem;border:2px dashed var(--line);border-radius:10px}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;padding:0}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:.3rem .9rem}
+.finder{margin-top:2rem}
+
+/* Forms */
+label{display:block;font-weight:600;margin:.7rem 0 .2rem;font-size:.95rem}
+input,select,textarea{width:100%;padding:.55rem .7rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);font:inherit}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;align-items:end;margin:.8rem 0}
+.err{color:#c0392b;display:block;min-height:1.1em}
+[data-theme="dark"] .err{color:#ff8a80}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.7rem 1rem;margin-bottom:.6rem}
+summary{cursor:pointer;font-weight:600}
+
+/* Dialog, footer, back-to-top */
+dialog{max-width:560px;width:92%;border:none;border-radius:14px;padding:1.4rem;background:var(--card);color:var(--text)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.footer{background:var(--navy);color:#d6e2f0;padding:1.5rem 0;font-size:.92rem}
+[data-theme="dark"] .footer{background:#08111e}
+.footer a{color:#9fe3ea}
+.top{position:fixed;right:1rem;bottom:1rem;background:var(--card);box-shadow:var(--shadow)}
+
+/* Mobile */
+@media (max-width:820px){
+  .menu-btn{display:block}
+  .nav-cta{display:none}
+  #menu{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--card);padding:.8rem 1.1rem;border-bottom:1px solid var(--line)}
+  #menu.open{display:flex}
+  .search{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* Print: show only the content */
+@media print{.nav,.hero,.top,.search,.filters,.footer,button,.btn{display:none!important}body{background:#fff;color:#000}.card{box-shadow:none;break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <a class="logo" href="#home">Career<b>Path</b></a>
+  <button id="menuBtn" class="icon-btn menu-btn" aria-expanded="false" aria-controls="menu" aria-label="Open menu">&#9776;</button>
+  <nav id="menu" aria-label="Main">
+    <a href="#home">Home</a><a href="#careers">Explore Careers</a><a href="#courses">Courses</a>
+    <a href="#scholarships">Scholarships</a><a href="#resources">Resources</a><a href="#about">About Us</a><a href="#contact">Contact</a>
+  </nav>
+  <button id="themeBtn" class="icon-btn" aria-label="Switch to dark mode">Dark</button>
+  <a class="btn nav-cta" href="#careers">Explore Careers</a>
+</header>
+
+<main id="main">
+<!-- HOME -->
+<section id="home" class="hero">
+  <div class="wrap">
+    <h1>Discover your future.<br>Choose your career.</h1>
+    <p class="lead">CareerPath puts careers, courses after 10th and 12th, scholarships and free learning resources in one simple place for school students.</p>
+    <div class="row">
+      <a class="btn" href="#careers">Explore Careers</a>
+      <a class="btn ghost" href="#courses">Find Courses</a>
+    </div>
+    <form id="searchForm" class="search" role="search">
+      <label for="globalSearch" class="sr">Search careers, courses and resources</label>
+      <input id="globalSearch" type="search" placeholder="Try: doctor, diploma, coding, NEET" autocomplete="off">
+      <button class="btn" type="submit">Search</button>
+    </form>
+    <div id="searchResults" class="results" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="wrap block">
+  <h2>Where are you now?</h2>
+  <div class="grid two">
+    <article class="card"><h3>After Class 10</h3><p>Pick a stream (Science, Commerce, Arts) or a diploma, ITI or skill course. Check the cards in <a href="#courses">Courses</a>.</p></article>
+    <article class="card"><h3>After Class 12</h3><p>Compare degrees such as B.E./B.Tech, B.Sc., medical, B.Com., B.A., BBA and design. See <a href="#courses">Courses</a>.</p></article>
+  </div>
+  <h2>Browse by category</h2>
+  <div id="categoryCards" class="grid"></div>
+</section>
+
+<!-- CAREERS -->
+<section id="careers" class="block alt">
+  <div class="wrap">
+    <h2>Explore careers</h2>
+    <p class="muted">Search by name or keyword, or filter by category and education stage.</p>
+    <div class="filters">
+      <div><label for="careerSearch">Search</label><input id="careerSearch" type="search" placeholder="e.g. data, design"></div>
+      <div><label for="careerCat">Category</label><select id="careerCat"></select></div>
+      <div><label for="careerStage">Education stage</label>
+        <select id="careerStage"><option value="">Any stage</option><option value="10">Can start after Class 10</option><option value="12">Can start after Class 12</option></select></div>
+      <button id="resetCareers" class="btn ghost" type="button">Reset filters</button>
+    </div>
+    <p id="careerCount" class="muted" aria-live="polite"></p>
+    <div id="careerGrid" class="grid"></div>
+    <div id="noCareers" class="empty" hidden>No careers match your search. Try a shorter keyword or press Reset filters.</div>
+    <h3 id="savedTitle">Saved careers</h3>
+    <div id="savedGrid" class="grid"></div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses" class="block">
+  <div class="wrap">
+    <h2>Courses after 10th and 12th</h2>
+    <p class="note">Durations and eligibility are approximate and differ by course and institution. Always verify current admission rules with the institution or official authority.</p>
+    <h3>After Class 10</h3><div id="courses10" class="grid"></div>
+    <h3>After Class 12</h3><div id="courses12" class="grid"></div>
+
+    <div class="card finder">
+      <h3>Find my educational pathway</h3>
+      <form id="finderForm">
+        <div class="filters">
+          <div><label for="fLevel">Current education level</label>
+            <select id="fLevel" required><option value="">Choose…</option><option value="10">Class 10 (or finishing)</option><option value="12">Class 12 (or finishing)</option></select></div>
+          <div><label for="fInterest">Main interest</label>
+            <select id="fInterest" required><option value="">Choose…</option><option value="tech">Computers and technology</option><option value="health">Health and care</option><option value="business">Business and money</option><option value="creative">Art and design</option><option value="science">Science and research</option><option value="hands">Working with tools</option><option value="society">People, teaching and society</option></select></div>
+          <div><label for="fLearn">Preferred way of learning</label>
+            <select id="fLearn" required><option value="">Choose…</option><option value="academic">Academic</option><option value="technical">Technical</option><option value="creative">Creative</option><option value="vocational">Vocational</option></select></div>
+          <button class="btn" type="submit">Show pathways</button>
+        </div>
+      </form>
+      <p id="finderMsg" class="muted" aria-live="polite"></p>
+      <div id="finderResults" class="grid"></div>
+      <p class="muted">These are general suggestions, not a professional career assessment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SCHOLARSHIPS -->
+<section id="scholarships" class="block alt">
+  <div class="wrap">
+    <h2>Scholarship information</h2>
+    <p class="note">We list official portals only. Schemes, eligibility, amounts and deadlines change, so please check the official website for current details.</p>
+    <div id="schGrid" class="grid two"></div>
+    <h3>Look for these scholarship types on the portals</h3>
+    <ul class="chips"><li>Government scholarships</li><li>Maharashtra state scholarships</li><li>Economically disadvantaged students</li><li>Merit-based</li><li>Students with disabilities</li><li>Institution-specific (ask your school or college office)</li></ul>
+    <p class="muted">Never share passwords, OTPs or bank details with anyone who is not on the official portal.</p>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources" class="block">
+  <div class="wrap">
+    <h2>Free learning resources</h2>
+    <div class="filters">
+      <div><label for="resType">Show</label>
+        <select id="resType"><option value="">All resources</option><option value="Government">Official government platforms</option><option value="Independent">Independent resources</option></select></div>
+    </div>
+    <div id="resGrid" class="grid"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="block alt">
+  <div class="wrap narrow">
+    <h2>Frequently asked questions</h2>
+    <div id="faq"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="block">
+  <div class="wrap narrow">
+    <h2>About the project</h2>
+    <p><strong>Project:</strong> Community Engagement Project, Second Year, Department of Computer Engineering, Sinhgad College of Engineering, Vadgaon, Pune.</p>
+    <p><strong>Problem:</strong> Many school students lack proper guidance about careers, courses, entrance exams, scholarships and learning resources, so they find it hard to make informed decisions.</p>
+    <p><strong>Aim:</strong> Put reliable career and education information in one simple, mobile-friendly website.</p>
+    <ul>
+      <li>Help students explore careers and compare pathways after 10th and 12th.</li>
+      <li>Point students to official scholarship portals and free learning resources.</li>
+      <li>Support awareness sessions in nearby schools and collect feedback.</li>
+    </ul>
+    <p><strong>Beneficiaries:</strong> Students of Classes 8–12, parents and teachers.</p>
+    <h3>Project team</h3>
+    <form id="teamForm" class="card">
+      <p class="muted">Edit these details and press Save. They stay in this browser only.</p>
+      <div class="filters" id="teamFields"></div>
+      <button class="btn" type="submit">Save team details</button>
+      <span id="teamMsg" aria-live="polite"></span>
+    </form>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="block alt">
+  <div class="wrap narrow">
+    <h2>Feedback</h2>
+    <p class="note">This version has no server. Feedback is saved only in this browser and is <strong>not</strong> sent to the project team.</p>
+    <form id="feedbackForm" class="card" novalidate>
+      <label for="fbName">Name (optional)</label><input id="fbName" maxlength="60">
+      <label for="fbStage">Education level</label>
+      <select id="fbStage" aria-describedby="e-stage"><option value="">Choose…</option><option>Class 8–10</option><option>Class 11–12</option><option>After Class 12</option><option>Parent or teacher</option></select>
+      <small id="e-stage" class="err"></small>
+      <label for="fbCat">Feedback category</label>
+      <select id="fbCat" aria-describedby="e-cat"><option value="">Choose…</option><option>Careers</option><option>Courses</option><option>Scholarships</option><option>Resources</option><option>Website problem</option></select>
+      <small id="e-cat" class="err"></small>
+      <label for="fbMsg">Message</label>
+      <textarea id="fbMsg" rows="4" maxlength="500" aria-describedby="e-msg"></textarea>
+      <small id="e-msg" class="err"></small>
+      <div class="row"><button class="btn" type="submit">Submit feedback</button><button id="clearFb" class="btn ghost" type="button">Clear saved feedback</button></div>
+      <p id="fbStatus" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p><strong>CareerPath</strong> – Community Engagement Project, Computer Engineering, Sinhgad College of Engineering, Vadgaon, Pune.</p>
+    <p>This is an educational student project. It is not an official government portal, is not affiliated with any government department or institution, and is not a substitute for professional career counselling.</p>
+    <p><a href="#home">Home</a> · <a href="#careers">Careers</a> · <a href="#courses">Courses</a> · <a href="#scholarships">Scholarships</a> · <a href="#resources">Resources</a> · <a href="#contact">Feedback</a></p>
+  </div>
+</footer>
+
+<button id="toTop" class="icon-btn top" aria-label="Back to top" hidden>&uarr;</button>
+
+<dialog id="careerDialog" aria-labelledby="dlgTitle">
+  <h3 id="dlgTitle"></h3><div id="dlgBody"></div>
+  <button id="dlgClose" class="btn" type="button">Close</button>
+</dialog>
+
+<script>
+/* data.js – all website content as plain JavaScript arrays.
+   Edit this file to add or change careers, courses, scholarships and resources. */
+
+const CATEGORIES = [
+  "Engineering and Technology", "Computer Science and IT", "Medical and Healthcare",
+  "Commerce and Finance", "Arts and Humanities", "Science and Research",
+  "Design and Creative Arts", "Government and Public Services",
+  "Agriculture and Environmental Studies", "Vocational and Skill-Based Careers"
+];
+
+// st = stages where the pathway can start: "10" (after Class 10) and/or "12" (after Class 12)
+const CAREERS = [
+  { id: 1, t: "Software Developer", c: CATEGORIES[1], st: ["12"], d: "Designs, writes and tests computer programs and apps.", p: "B.E./B.Tech in Computer Engineering or IT, or BCA/B.Sc. Computer Science.", s: "Logical thinking, programming, problem solving", e: "JEE Main, MHT-CET (for B.E./B.Tech admission)", w: "Software companies, startups, IT services, freelancing" },
+  { id: 2, t: "Web Developer", c: CATEGORIES[1], st: ["10", "12"], d: "Builds websites and web apps using HTML, CSS and JavaScript.", p: "Diploma in Computer/IT after Class 10, or a degree in computer science after Class 12. Self-learning also helps.", s: "HTML, CSS, JavaScript, design sense", e: "Depends on the course chosen", w: "Web agencies, product companies, freelancing" },
+  { id: 3, t: "Data Analyst", c: CATEGORIES[1], st: ["12"], d: "Collects and studies data to help organisations make decisions.", p: "B.Sc./B.E./B.Tech or BCA with maths, statistics or computing.", s: "Maths, Excel, SQL, Python, clear reporting", e: "Depends on the course chosen", w: "Banks, retail, healthcare, IT companies" },
+  { id: 4, t: "Cybersecurity Analyst", c: CATEGORIES[1], st: ["12"], d: "Protects computers, networks and data from attacks.", p: "B.E./B.Tech or B.Sc. in computer fields, plus security certifications.", s: "Networking, operating systems, careful analysis", e: "JEE Main, MHT-CET (for B.E./B.Tech admission)", w: "IT firms, banks, government agencies" },
+  { id: 5, t: "AI/ML Engineer", c: CATEGORIES[1], st: ["12"], d: "Builds systems that learn from data, such as recommendation or vision tools.", p: "B.E./B.Tech in Computer/AI or related fields, often followed by further study.", s: "Maths, statistics, Python, curiosity", e: "JEE Main, MHT-CET (for B.E./B.Tech admission)", w: "Technology companies, research labs, startups" },
+  { id: 6, t: "Mechanical Engineer", c: CATEGORIES[0], st: ["10", "12"], d: "Designs and improves machines, engines and manufacturing systems.", p: "Diploma after Class 10 or B.E./B.Tech after Class 12.", s: "Physics, maths, drawing, practical skills", e: "JEE Main, MHT-CET (for B.E./B.Tech admission)", w: "Manufacturing, automobile, energy, maintenance" },
+  { id: 7, t: "Civil Engineer", c: CATEGORIES[0], st: ["10", "12"], d: "Plans and supervises roads, buildings, bridges and water systems.", p: "Diploma after Class 10 or B.E./B.Tech after Class 12.", s: "Maths, drawing, site management, teamwork", e: "JEE Main, MHT-CET (for B.E./B.Tech admission)", w: "Construction, government works, consulting" },
+  { id: 8, t: "Doctor", c: CATEGORIES[2], st: ["12"], d: "Diagnoses and treats illness and promotes public health.", p: "MBBS after Class 12 with Physics, Chemistry and Biology.", s: "Biology, empathy, patience, communication", e: "NEET-UG", w: "Hospitals, clinics, public health, research" },
+  { id: 9, t: "Nurse", c: CATEGORIES[2], st: ["12"], d: "Cares for patients and supports doctors in hospitals and communities.", p: "GNM or B.Sc. Nursing; eligibility varies, so check the current rules.", s: "Care, discipline, teamwork, communication", e: "Check the current admission process", w: "Hospitals, clinics, community health" },
+  { id: 10, t: "Pharmacist", c: CATEGORIES[2], st: ["12"], d: "Prepares and advises on medicines and works in pharmacy and pharma industry.", p: "D.Pharm or B.Pharm.", s: "Chemistry, accuracy, responsibility", e: "Check the current admission process (for example MHT-CET for B.Pharm in Maharashtra)", w: "Medical stores, hospitals, pharma companies" },
+  { id: 11, t: "Chartered Accountant", c: CATEGORIES[3], st: ["12"], d: "Handles accounting, taxation, auditing and financial advice.", p: "CA Foundation, Intermediate and Final through ICAI, with practical training.", s: "Maths, accounting, ethics, focus", e: "ICAI CA examinations", w: "Audit firms, companies, own practice" },
+  { id: 12, t: "Teacher", c: CATEGORIES[4], st: ["12"], d: "Teaches and guides students in schools and colleges.", p: "A degree in the subject, then B.Ed. for school teaching.", s: "Subject knowledge, communication, patience", e: "TET/CTET (for school teaching)", w: "Schools, colleges, coaching, education content" },
+  { id: 13, t: "Graphic Designer", c: CATEGORIES[6], st: ["10", "12"], d: "Creates visuals for posters, brands, apps and media.", p: "Diploma or degree in design, or a strong portfolio with skill courses.", s: "Creativity, drawing, design software, communication", e: "NID DAT, UCEED (for some design institutes)", w: "Studios, media, advertising, freelancing" },
+  { id: 14, t: "Agricultural Scientist", c: CATEGORIES[8], st: ["12"], d: "Works on better crops, soil health and farming methods.", p: "B.Sc. Agriculture, then M.Sc. and research.", s: "Biology, field work, observation", e: "Check the current admission process of agriculture universities", w: "Research institutes, agri-companies, government departments" },
+  { id: 15, t: "Electrician", c: CATEGORIES[9], st: ["10"], d: "Installs, repairs and maintains electrical systems.", p: "ITI (Electrician trade) after Class 10, with apprenticeship.", s: "Safety, practical skills, problem solving", e: "ITI admission process", w: "Industry, construction, own business, government jobs" },
+  { id: 16, t: "Civil Services Officer", c: CATEGORIES[7], st: ["12"], d: "Works in administration and public service for the government.", p: "Any graduation first, then competitive exams such as UPSC or MPSC.", s: "General knowledge, writing, discipline", e: "UPSC, MPSC (after graduation)", w: "Central and state government departments" },
+  { id: 17, t: "Research Scientist", c: CATEGORIES[5], st: ["12"], d: "Studies questions in physics, chemistry, biology or maths through experiments.", p: "B.Sc., then M.Sc. and PhD.", s: "Curiosity, maths, patience, writing", e: "Check current university and institute entrance exams", w: "Universities, research labs, industry" }
+];
+
+// i = interests, ty = learning types (used by the pathway finder)
+const COURSES = [
+  { n: "Science stream (Classes 11–12)", s: "10", w: "Senior secondary stream with Physics, Chemistry and Maths or Biology.", el: "Class 10 pass", du: "About 2 years", ex: "Usually none; follow the junior college admission process", fu: "Engineering, medical, science and many other degrees", l: "https://www.mahahsscboard.in/", i: ["science", "tech", "health"], ty: ["academic"] },
+  { n: "Commerce stream (Classes 11–12)", s: "10", w: "Senior secondary stream with Accountancy, Business Studies and Economics.", el: "Class 10 pass", du: "About 2 years", ex: "Usually none", fu: "B.Com., BBA, CA, finance and business courses", l: "https://www.mahahsscboard.in/", i: ["business"], ty: ["academic"] },
+  { n: "Arts / Humanities stream (Classes 11–12)", s: "10", w: "Senior secondary stream with languages, history, political science and more.", el: "Class 10 pass", du: "About 2 years", ex: "Usually none", fu: "B.A., law, teaching, civil services preparation, design", l: "https://www.mahahsscboard.in/", i: ["society", "creative"], ty: ["academic", "creative"] },
+  { n: "Diploma in Engineering / Technology", s: "10", w: "Practical technical course in fields like Computer, Mechanical, Civil and Electrical.", el: "Class 10 pass (rules vary)", du: "About 3 years", ex: "State diploma admission process", fu: "Technician jobs, or degree entry in the second year where permitted", l: "https://www.msbte.org.in/", i: ["tech", "hands"], ty: ["technical", "vocational"] },
+  { n: "ITI and vocational training", s: "10", w: "Hands-on trades such as Electrician, Fitter and Welder.", el: "Class 8–10 depending on the trade", du: "About 1–2 years depending on trade", ex: "ITI admission process", fu: "Skilled jobs, apprenticeships, self-employment", l: "https://dgt.gov.in/", i: ["hands"], ty: ["vocational", "technical"] },
+  { n: "Short skill-development courses", s: "10", w: "Short courses in digital, technical and service skills.", el: "Varies by course", du: "Weeks to months", ex: "None for most courses", fu: "Entry-level jobs and extra skills alongside studies", l: "https://www.skillindiadigital.gov.in/", i: ["tech", "hands", "creative", "business"], ty: ["vocational", "technical", "creative"] },
+  { n: "B.E. / B.Tech (Engineering)", s: "12", w: "Degree in engineering fields such as Computer, Mechanical, Civil and Electronics.", el: "Class 12 with Physics, Maths and a third subject as per rules", du: "About 4 years", ex: "JEE Main, MHT-CET", fu: "Engineering jobs, higher studies, entrepreneurship", l: "https://www.aicte-india.org/", i: ["tech", "science", "hands"], ty: ["technical", "academic"] },
+  { n: "B.Sc. and other science degrees", s: "12", w: "Degree in subjects like Physics, Chemistry, Maths, Biology and Computer Science.", el: "Class 12 (Science, subject rules vary)", du: "About 3 years", ex: "Varies by university", fu: "Research, teaching, M.Sc., technical jobs", l: "https://www.ugc.gov.in/", i: ["science", "tech", "health"], ty: ["academic"] },
+  { n: "Medical and allied healthcare courses", s: "12", w: "MBBS, BDS, AYUSH, nursing, pharmacy and other health courses.", el: "Class 12 with Biology (rules vary)", du: "About 3–5.5 years depending on course", ex: "NEET-UG and other exams as applicable", fu: "Hospitals, clinics, public health, research", l: "https://www.nmc.org.in/", i: ["health", "science"], ty: ["academic", "technical"] },
+  { n: "B.Com. and finance degrees", s: "12", w: "Degree in accounting, taxation, banking and business.", el: "Class 12 (any stream in many cases)", du: "About 3 years", ex: "Varies; CA via ICAI", fu: "Accounting, banking, CA, company jobs", l: "https://www.icai.org/", i: ["business"], ty: ["academic"] },
+  { n: "B.A. and humanities degrees", s: "12", w: "Degree in languages, history, psychology, economics and social sciences.", el: "Class 12 (any stream)", du: "About 3 years", ex: "Varies by university", fu: "Teaching, civil services, law, media, social work", l: "https://www.ugc.gov.in/", i: ["society", "creative"], ty: ["academic", "creative"] },
+  { n: "BBA / BMS and management courses", s: "12", w: "Degree in business management and leadership.", el: "Class 12 (rules vary)", du: "About 3 years", ex: "Check the current CET or institute process", fu: "Management, marketing, MBA, entrepreneurship", l: "https://cetcell.mahacet.org/", i: ["business"], ty: ["academic"] },
+  { n: "Design and creative courses", s: "12", w: "Degrees and diplomas in graphic, product, fashion, animation and fine arts.", el: "Class 12 (rules vary)", du: "About 3–4 years", ex: "NID DAT, UCEED and institute tests", fu: "Design studios, media, freelancing", l: "https://www.nid.edu/", i: ["creative"], ty: ["creative", "technical"] },
+  { n: "Vocational qualifications after Class 12", s: "12", w: "Job-focused skill programmes and certificates.", el: "Varies by course", du: "Months to 2 years", ex: "Usually none", fu: "Skilled jobs and self-employment", l: "https://www.skillindiadigital.gov.in/", i: ["hands", "tech", "business", "creative"], ty: ["vocational", "technical"] }
+];
+
+const SCHOLARSHIPS = [
+  { n: "National Scholarship Portal (NSP)", g: "Students across India, for many central and state schemes", el: "Differs for every scheme. Please check the official website for current details.", docs: "Commonly: identity proof, previous marksheet, income certificate, bank account in the student's name, school or college proof (varies by scheme).", u: "https://scholarships.gov.in/" },
+  { n: "MahaDBT Portal (Maharashtra)", g: "Students in Maharashtra, for state scholarships and benefit schemes", el: "Differs for every scheme. Please check the official website for current details.", docs: "Commonly: identity proof, domicile or residence proof, marksheet, income certificate, caste certificate where applicable (varies by scheme).", u: "https://mahadbt.maharashtra.gov.in/" }
+];
+
+const RESOURCES = [
+  { n: "SWAYAM", t: "Government", cat: "Online courses", d: "Free online courses from Indian institutions.", a: "Class 11 onward and college students", u: "https://swayam.gov.in/" },
+  { n: "DIKSHA", t: "Government", cat: "School learning", d: "Digital lessons and textbooks linked to school curricula.", a: "School students and teachers", u: "https://diksha.gov.in/" },
+  { n: "National Digital Library of India", t: "Government", cat: "Books and study material", d: "A large library of books, articles and study material.", a: "All learners", u: "https://ndl.iitkgp.ac.in/" },
+  { n: "NPTEL", t: "Government", cat: "Engineering and science", d: "Video lectures on engineering, science and humanities.", a: "Class 11 onward and college students", u: "https://nptel.ac.in/" },
+  { n: "National Career Service", t: "Government", cat: "Career exploration", d: "Government portal for career information and job listings.", a: "Students and job seekers", u: "https://www.ncs.gov.in/" },
+  { n: "Skill India Digital", t: "Government", cat: "Skill development", d: "Skill courses and training information.", a: "Students and young adults", u: "https://www.skillindiadigital.gov.in/" },
+  { n: "NTA (exam information)", t: "Government", cat: "Entrance exam preparation", d: "Official notices for national entrance exams such as NEET and JEE Main.", a: "Class 11–12 students", u: "https://nta.ac.in/" },
+  { n: "Khan Academy", t: "Independent", cat: "Maths and science", d: "Free lessons and practice in maths, science and more.", a: "Class 6 onward", u: "https://www.khanacademy.org/" },
+  { n: "freeCodeCamp", t: "Independent", cat: "Programming", d: "Free coding lessons and projects.", a: "Beginners and above", u: "https://www.freecodecamp.org/" },
+  { n: "BBC Learning English", t: "Independent", cat: "English communication", d: "Free lessons for speaking and understanding English.", a: "All learners", u: "https://www.bbc.co.uk/learningenglish" }
+];
+
+const FAQS = [
+  ["Is CareerPath an official government website?", "No. It is a student project for education only. For official rules, use the links to government and institution websites."],
+  ["How do I choose a stream after Class 10?", "Think about your subjects of interest, your strengths and your future options. Talk to teachers, parents and counsellors, and compare streams in the Courses section."],
+  ["Can I trust the scholarship details here?", "We only link to official portals. Schemes, eligibility and deadlines change, so always confirm on the official website."],
+  ["Where is my saved data stored?", "Saved careers and feedback stay in your own browser (LocalStorage). They are not sent anywhere."],
+  ["Does the website need internet?", "Careers, courses and the pathway finder work offline. External links need internet access."]
+];
+
+/* main.js – all interactive features for CareerPath (plain JavaScript, no libraries). */
+
+// ---------- Helpers ----------
+const $ = (id) => document.getElementById(id);
+
+// LocalStorage wrapper: fails gracefully if storage is blocked or unavailable.
+const store = {
+  get(key, fallback) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+    catch (e) { return fallback; }
+  },
+  set(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch (e) { return false; }
+  }
+};
+
+// Create an element with optional class and text (text is inserted safely).
+function el(tag, cls, text) {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (text) node.textContent = text;
+  return node;
+}
+
+// Safe external link that opens in a new tab.
+function extLink(label, url) {
+  const a = el("a", "btn small", label);
+  a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
+  return a;
+}
+
+// ---------- Navigation, theme, back-to-top ----------
+const menuBtn = $("menuBtn"), menu = $("menu");
+menuBtn.addEventListener("click", () => {
+  const open = menu.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", open);
+});
+menu.addEventListener("click", (e) => {
+  if (e.target.tagName === "A") { menu.classList.remove("open"); menuBtn.setAttribute("aria-expanded", false); }
+});
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  $("themeBtn").textContent = theme === "dark" ? "Light" : "Dark";
+  $("themeBtn").setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+}
+applyTheme(store.get("cp_theme", "light"));
+$("themeBtn").addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  applyTheme(next); store.set("cp_theme", next);
+});
+
+window.addEventListener("scroll", () => { $("toTop").hidden = window.scrollY < 500; });
+$("toTop").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+// ---------- Careers ----------
+let saved = store.get("cp_saved", []); // array of saved career ids
+
+function careerCard(c, compact) {
+  const card = el("article", "card");
+  card.append(el("span", "tag", c.c), el("h3", "", c.t), el("p", "", c.d));
+  const row = el("div", "row");
+  const more = el("button", "btn small", "Learn more");
+  more.type = "button"; more.dataset.act = "more"; more.dataset.id = c.id;
+  const save = el("button", "btn small ghost", saved.includes(c.id) ? "Saved ✓" : "Save");
+  save.type = "button"; save.dataset.act = "save"; save.dataset.id = c.id;
+  save.setAttribute("aria-pressed", saved.includes(c.id));
+  row.append(more, save);
+  card.append(row);
+  return card;
+}
+
+function renderCareers() {
+  const q = $("careerSearch").value.trim().toLowerCase();
+  const cat = $("careerCat").value, stage = $("careerStage").value;
+  const list = CAREERS.filter((c) =>
+    (!cat || c.c === cat) && (!stage || c.st.includes(stage)) &&
+    (!q || [c.t, c.c, c.d, c.s, c.p].join(" ").toLowerCase().includes(q)));
+  const grid = $("careerGrid");
+  grid.replaceChildren(...list.map((c) => careerCard(c)));
+  $("noCareers").hidden = list.length > 0;
+  $("careerCount").textContent = list.length + " of " + CAREERS.length + " careers shown";
+  renderSaved();
+}
+
+function renderSaved() {
+  const items = CAREERS.filter((c) => saved.includes(c.id));
+  $("savedGrid").replaceChildren(...(items.length
+    ? items.map((c) => careerCard(c))
+    : [el("p", "muted", "No saved careers yet. Press Save on any career.")]));
+}
+
+function toggleSave(id) {
+  saved = saved.includes(id) ? saved.filter((x) => x !== id) : [...saved, id];
+  if (!store.set("cp_saved", saved)) alert("Saving is not available in this browser, so your list will reset when you refresh.");
+  renderCareers();
+}
+
+function showCareer(id) {
+  const c = CAREERS.find((x) => x.id === id);
+  $("dlgTitle").textContent = c.t;
+  const body = $("dlgBody");
+  body.replaceChildren();
+  [["Category", c.c], ["What they do", c.d], ["Typical pathway", c.p], ["Important skills", c.s],
+   ["Entrance exams", c.e], ["Work opportunities", c.w]].forEach(([k, v]) => {
+    const p = el("p"); p.append(el("strong", "", k + ": "), document.createTextNode(v)); body.append(p);
+  });
+  body.append(el("p", "muted", "Verify current admission rules with the institution or official authority."));
+  $("careerDialog").showModal();
+}
+
+// One click handler for every career card (including saved ones).
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-act]");
+  if (!b) return;
+  const id = Number(b.dataset.id);
+  if (b.dataset.act === "more") showCareer(id); else toggleSave(id);
+});
+$("dlgClose").addEventListener("click", () => $("careerDialog").close());
+
+$("careerCat").append(new Option("All categories", ""), ...CATEGORIES.map((c) => new Option(c, c)));
+["careerSearch", "careerCat", "careerStage"].forEach((id) => $(id).addEventListener("input", renderCareers));
+$("resetCareers").addEventListener("click", () => {
+  $("careerSearch").value = ""; $("careerCat").value = ""; $("careerStage").value = ""; renderCareers();
+});
+
+// Category cards on the home page set the filter and jump to the careers section.
+$("categoryCards").replaceChildren(...CATEGORIES.map((name) => {
+  const b = el("button", "card cat", name);
+  b.type = "button";
+  b.addEventListener("click", () => {
+    $("careerCat").value = name; renderCareers(); $("careers").scrollIntoView({ behavior: "smooth" });
+  });
+  return b;
+}));
+
+// ---------- Courses and pathway finder ----------
+function courseCard(c) {
+  const card = el("article", "card");
+  card.append(el("h3", "", c.n), el("p", "", c.w));
+  [["Eligibility", c.el], ["Duration (approx.)", c.du], ["Entrance exams", c.ex], ["Future options", c.fu]].forEach(([k, v]) => {
+    const p = el("p", "small-p"); p.append(el("strong", "", k + ": "), document.createTextNode(v)); card.append(p);
+  });
+  card.append(extLink("Official website", c.l));
+  return card;
+}
+$("courses10").replaceChildren(...COURSES.filter((c) => c.s === "10").map(courseCard));
+$("courses12").replaceChildren(...COURSES.filter((c) => c.s === "12").map(courseCard));
+
+$("finderForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const level = $("fLevel").value, interest = $("fInterest").value, learn = $("fLearn").value;
+  // Score each course: +2 for matching interest, +1 for matching learning type.
+  const ranked = COURSES.filter((c) => c.s === level)
+    .map((c) => ({ c, score: (c.i.includes(interest) ? 2 : 0) + (c.ty.includes(learn) ? 1 : 0) }))
+    .filter((x) => x.score > 0).sort((a, b) => b.score - a.score);
+  $("finderMsg").textContent = ranked.length
+    ? ranked.length + " pathway(s) may suit you. Best matches are first."
+    : "No close match found. Try a different interest or learning type.";
+  $("finderResults").replaceChildren(...ranked.map((x) => courseCard(x.c)));
+});
+
+// ---------- Scholarships ----------
+$("schGrid").replaceChildren(...SCHOLARSHIPS.map((s) => {
+  const card = el("article", "card");
+  card.append(el("h3", "", s.n));
+  [["For", s.g], ["Eligibility", s.el], ["Documents often asked for", s.docs]].forEach(([k, v]) => {
+    const p = el("p", "small-p"); p.append(el("strong", "", k + ": "), document.createTextNode(v)); card.append(p);
+  });
+  card.append(extLink("Visit official website", s.u));
+  return card;
+}));
+
+// ---------- Resources ----------
+function renderResources() {
+  const type = $("resType").value;
+  $("resGrid").replaceChildren(...RESOURCES.filter((r) => !type || r.t === type).map((r) => {
+    const card = el("article", "card");
+    card.append(el("span", "tag", r.t === "Government" ? "Official government platform" : "Independent resource"),
+      el("h3", "", r.n), el("p", "", r.d));
+    const p = el("p", "small-p"); p.append(el("strong", "", "Subject: "), document.createTextNode(r.cat + ". For: " + r.a + "."));
+    card.append(p, extLink("Open website", r.u));
+    return card;
+  }));
+}
+$("resType").addEventListener("input", renderResources);
+
+// ---------- Global search (careers, courses, resources) ----------
+$("searchForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const q = $("globalSearch").value.trim().toLowerCase();
+  const box = $("searchResults"); box.replaceChildren();
+  if (!q) { box.append(el("p", "muted", "Type a word to search.")); return; }
+  const hits = [
+    ...CAREERS.filter((c) => [c.t, c.c, c.d, c.s].join(" ").toLowerCase().includes(q)).map((c) => ["Career", c.t, "#careers", c.id]),
+    ...COURSES.filter((c) => [c.n, c.w, c.ex].join(" ").toLowerCase().includes(q)).map((c) => ["Course", c.n, "#courses"]),
+    ...RESOURCES.filter((r) => [r.n, r.d, r.cat].join(" ").toLowerCase().includes(q)).map((r) => ["Resource", r.n, "#resources"])
+  ];
+  if (!hits.length) { box.append(el("p", "empty", "Nothing found for “" + q + "”. Try another word.")); return; }
+  hits.slice(0, 12).forEach(([kind, name, href]) => {
+    const a = el("a", "hit"); a.href = href;
+    a.append(el("strong", "", kind + ": "), document.createTextNode(name));
+    box.append(a);
+  });
+});
+
+// ---------- FAQ (expandable) ----------
+$("faq").replaceChildren(...FAQS.map(([q, a]) => {
+  const d = el("details"); d.append(el("summary", "", q), el("p", "", a)); return d;
+}));
+
+// ---------- About: editable team details ----------
+const teamFields = ["Student names", "Roll numbers", "Class and department", "Faculty mentor", "College name"];
+const team = store.get("cp_team", { "Class and department": "Second Year, Computer Engineering", "College name": "Sinhgad College of Engineering, Vadgaon, Pune" });
+$("teamFields").replaceChildren(...teamFields.map((f, i) => {
+  const w = el("div"); const l = el("label", "", f); l.htmlFor = "team" + i;
+  const inp = el("input"); inp.id = "team" + i; inp.value = team[f] || ""; inp.placeholder = "Add " + f.toLowerCase();
+  w.append(l, inp); return w;
+}));
+$("teamForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  teamFields.forEach((f, i) => { team[f] = $("team" + i).value.trim(); });
+  $("teamMsg").textContent = store.set("cp_team", team) ? " Saved in this browser." : " Could not save in this browser.";
+});
+
+// ---------- Feedback form (validated, stored locally only) ----------
+function fbStatus(msg) { $("fbStatus").textContent = msg; }
+function showFbCount() {
+  const n = store.get("cp_feedback", []).length;
+  fbStatus(n ? n + " feedback message(s) saved in this browser only." : "");
+}
+$("feedbackForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const stage = $("fbStage").value, cat = $("fbCat").value, msg = $("fbMsg").value.trim();
+  $("e-stage").textContent = stage ? "" : "Please choose your education level.";
+  $("e-cat").textContent = cat ? "" : "Please choose a feedback category.";
+  $("e-msg").textContent = msg.length >= 10 ? "" : "Please write at least 10 characters.";
+  if (!stage || !cat || msg.length < 10) { fbStatus("Please fix the errors above."); return; }
+  const all = store.get("cp_feedback", []);
+  all.push({ name: $("fbName").value.trim(), stage, cat, msg, time: new Date().toISOString() });
+  if (store.set("cp_feedback", all)) {
+    $("feedbackForm").reset();
+    fbStatus("Thank you! Your feedback is saved in this browser only. It has not been sent to the project team.");
+  } else fbStatus("Could not save: browser storage is unavailable.");
+});
+$("clearFb").addEventListener("click", () => {
+  store.set("cp_feedback", []); fbStatus("Saved feedback cleared.");
+});
+
+// ---------- Start ----------
+renderCareers(); renderResources(); showFbCount();
+
+</script>
+</body>
+</html>
